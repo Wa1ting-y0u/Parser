@@ -1,9 +1,10 @@
 import requests
-from bs4 import BeautifulSoup
+from bs4 import *
 
 
 class Parser:
 
+    @staticmethod
     def get_hrefs():
         url = "https://health-diet.ru/base_of_food/food_24526/?utm_source=leftMenu&utm_medium=base_of_food"
         hrefs = dict()
@@ -17,6 +18,18 @@ class Parser:
 
         scr = response.text
         soup = BeautifulSoup(scr, "lxml")
-        products_table = soup.find(class_="")
+        products_table = soup.find(
+            class_="uk-table mzr-tc-group-table uk-table-hover uk-table-striped uk-table-condensed").find(
+            "tbody").find_all(
+            "tr")
         for product in products_table:
-            prouct_head = product
+            product_head = product.find("a")
+            title = product_head.get_text()
+            href = product_head.get("href")
+            hrefs[title] = href
+
+        return hrefs
+
+    @staticmethod
+    def get_titles(hrefs: dict) -> list[str]:
+        pass
