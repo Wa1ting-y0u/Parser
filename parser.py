@@ -31,5 +31,20 @@ class Parser:
         return hrefs
 
     @staticmethod
-    def get_titles(hrefs: dict) -> list[str]:
-        pass
+    def get_titles(hrefs):
+        for key in hrefs:
+            url = f'https://health-diet.ru{hrefs[key]}'
+            #print(url)
+
+            headers = {
+                "accept": "*/*",
+                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36"
+            }
+
+            response = requests.get(url, headers=headers)
+
+            scr = response.text
+            soup = BeautifulSoup(scr, "lxml")
+            table = soup.find(class_ = 'el-table').find_all("tr")[1]
+            kall= table.find_all("td")[2].get_text()
+            print(kall)
